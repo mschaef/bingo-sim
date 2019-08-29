@@ -163,8 +163,8 @@ int main(int argc, char *argv[]) {
 
      struct board_t b;
 
-     for(ii = 0; ii < 100000; ii++) {
-          if (ii % 10000 == 0) {
+     for(ii = 0; ii < 100000000; ii++) {
+          if (ii % 1000000 == 0) {
                printf("%d\n", ii);
           }
 
