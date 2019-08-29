@@ -91,7 +91,7 @@ void print_board(struct board_t *b) {
      }
 }
 
-void init_board(struct board_t *board) {
+void generate_board(struct board_t *board) {
      struct balls_t bs;
 
      init_balls(&bs);
@@ -109,7 +109,9 @@ void init_board(struct board_t *board) {
                board->squares[board_ofs(x, y)] = b;
           }
      }
+}
 
+void reset_board(struct board_t *board) {
      board->marks = 0;
 }
 
@@ -131,21 +133,18 @@ ball board_step(struct balls_t *balls, struct board_t *board) {
      return b;
 }
 
-int play_game() {
+int board_solved_p(struct board_t *board) {
+     return board->marks == 0x01FFFFFF;
+}
+     
+int play_game(struct board_t *board) {
      struct balls_t balls;
      init_balls(&balls);
 
-     struct board_t b;
-     init_board(&b);
-
      int step = 0;
      
-     while(1) {
-          if (board_step(&balls, &b) < 0) {
-               break;
-          }
-
-          if (b.marks == 0x01FFFFFF) {
+     while(!board_solved_p(board)) {
+          if (board_step(&balls, board) < 0) {
                break;
           }
 
@@ -159,20 +158,24 @@ int main(int argc, char *argv[]) {
      int ii;
      init_mt19937(0);
 
-     int counts[NBALLS];
+     int counts[NBALLS + 1];
      memset(counts, 0, sizeof(counts));
 
-     for(ii = 0; ii < 100000000; ii++) {
-          if (ii % 1000000 == 0) {
+     struct board_t b;
+
+     for(ii = 0; ii < 100000; ii++) {
+          if (ii % 10000 == 0) {
                printf("%d\n", ii);
           }
-          
-          int steps = play_game();
+
+          generate_board(&b);
+          reset_board(&b);
+          int steps = play_game(&b);
 
           counts[steps]++;
      }
 
-     for(ii = 0; ii < NBALLS; ii++) {
+     for(ii = BDIM * BDIM; ii <= NBALLS; ii++) {
           printf("%d, %d\n", ii, counts[ii]);
      }
      
