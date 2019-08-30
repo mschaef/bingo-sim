@@ -21,18 +21,26 @@ struct ball_info_t {
      int t;
 };
 
-int ball_info_t_order(const void *el1, const void *el2) {
-     struct ball_info_t *b1 = (struct ball_info_t *)el1;
-     struct ball_info_t *b2 = (struct ball_info_t *)el2;
+void shuffle_balls(ball balls[]) {
+     int ii;
 
-     if (b1->t < b2->t) {
-          return -1;
-     } else if (b1->t > b2->t) {
-          return 1;
-     } else {
-          return 0;
+     for(ii = 0; ii < NBALLS; ii++) {
+          int index = mt19937_int31() % NBALLS;
+
+          ball tmp = balls[NBALLS - ii - 1];
+          balls[NBALLS - ii - 1] = balls[index];
+          balls[index] = tmp;
      }
+
+     /*
+     printf("after: ");     
+     for(ii = 0; ii < NBALLS; ii++) {
+          printf("%d, ", (int)balls[ii]);
+     }
+     printf("\n");
+     */
 }
+
 
 struct balls_t {
      int ndrawn;
@@ -44,16 +52,11 @@ void init_balls(struct balls_t *b) {
      struct ball_info_t bis[NBALLS];
 
      for(ii = 0; ii < NBALLS; ii++) {
-          bis[ii].b = ii;
-          bis[ii].t = mt19937_int31();
+          b->balls[ii] = ii;
      }
 
-     qsort(bis, NBALLS, sizeof(struct ball_info_t), ball_info_t_order);
-
-     for(ii = 0; ii < NBALLS; ii++) {
-          b->balls[ii] = bis[ii].b;
-     }
-
+     shuffle_balls(b->balls);
+     
      b->ndrawn = 0;
 }
 
