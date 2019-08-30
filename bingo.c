@@ -18,7 +18,7 @@ int col_ball_p(ball b, int col) {
               
 struct ball_info_t {
      ball b;
-     double t;
+     int t;
 };
 
 int ball_info_t_order(const void *el1, const void *el2) {
@@ -45,7 +45,7 @@ void init_balls(struct balls_t *b) {
 
      for(ii = 0; ii < NBALLS; ii++) {
           bis[ii].b = ii;
-          bis[ii].t = mt19937_real1();
+          bis[ii].t = mt19937_int31();
      }
 
      qsort(bis, NBALLS, sizeof(struct ball_info_t), ball_info_t_order);
