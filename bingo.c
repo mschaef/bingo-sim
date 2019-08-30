@@ -36,7 +36,7 @@ int ball_info_t_order(const void *el1, const void *el2) {
 
 struct balls_t {
      int ndrawn;
-     char balls[NBALLS];
+     ball balls[NBALLS];
 };
 
 void init_balls(struct balls_t *b) {
@@ -167,7 +167,7 @@ int main(int argc, char *argv[]) {
           if (ii % 1000000 == 0) {
                printf("%d\n", ii);
           }
-
+          
           generate_board(&b);
           reset_board(&b);
           int steps = play_game(&b);
